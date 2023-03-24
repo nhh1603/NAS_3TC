@@ -6,3 +6,6 @@ class Interface:
 
 class Network:
     pass
+
+class Bgp:
+    pass

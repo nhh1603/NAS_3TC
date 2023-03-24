@@ -72,7 +72,24 @@ router ospf 1
  {% for interface in router.interfaces %}
  network {{ interface.address }} 0.0.0.255 area 0
  {% endfor %}
+ mpls ldp autoconfig area 0
 !
+{% if router.bgp %}
+router bgp {{ router.bgp.number }}
+ bgp router-id {{ router.loopback.address }}
+ bgp log-neighbor-changes
+ {% for neightbor in router.bgp.neighbors %}
+ neighbor {{ neightbor }} remote-as {{ router.bgp.number }}
+ neighbor {{ neightbor }} update-source Loopback0
+ {% endfor %}
+!
+address-family vpnv4
+ {% for neighbor in router.bgp.neighbors %}
+ neighbor {{ neighbor }} activate
+ {% endfor %}
+exit-address-family
+!
+{% endif %}
 ip forward-protocol nd
 !
 !

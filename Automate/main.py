@@ -1,7 +1,7 @@
 import json
 import os
 
-from models import Router, Interface, Network
+from models import Router, Interface, Network, Bgp
 from jinja2 import Environment, FileSystemLoader
 
 def handle_network(network):
@@ -44,6 +44,12 @@ def handle_network(network):
             # networkObj.address = "10.1.0.0"
             networkObj.mask = "0.0.0.255"
             routerObj.network = networkObj
+
+            bgp = Bgp()
+            bgp.number = As['number']
+            bgp.neighbors = router['bgpNeighbors']
+            routerObj.bgp = bgp
+
 
             routerAsList[routerObj.id] = routerObj
 

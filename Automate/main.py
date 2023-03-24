@@ -8,6 +8,9 @@ def handle_network(network):
     ASList = {}
     for As in network['AS']:
         routerAsList = {}
+        ipNetworkUsed = {}
+        lastSubnetId = 0
+
         for router in As['routers']:
 
             routerObj = Router()
@@ -24,16 +27,26 @@ def handle_network(network):
             for connection in router['connections']:
                 interface = Interface()
                 interface.name = "GigabitEthernet" + connection['interface'] + "/0"
-                interface.address = "10.1." + router['id'] + "." + connection['router']
+
+                if (router["id"], connection['router']) in ipNetworkUsed:
+                    interface.prefix = ipNetworkUsed[(router["id"], connection['router'])]
+                else:
+                    lastSubnetId += 1
+                    interface.prefix = lastSubnetId
+                    ipNetworkUsed[(connection['router'], router["id"])] = lastSubnetId
+
+                interface.address = "10.1." + str(interface.prefix) + "." + router['id']
+                interface.ospfArea = connection['ospfArea']
                 routerObj.interfaces.append(interface)
 
             networkObj = Network()
             networkObj.address = "10.1." + router['id'] + "." + "0"
+            # networkObj.address = "10.1.0.0"
             networkObj.mask = "0.0.0.255"
             routerObj.network = networkObj
 
             routerAsList[routerObj.id] = routerObj
-            
+
         ASList[As['number']] = routerAsList
 
 

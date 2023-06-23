@@ -9,3 +9,9 @@ class Network:
 
 class Bgp:
     pass
+
+class Neighbor:
+    pass
+
+class VRF:
+    pass

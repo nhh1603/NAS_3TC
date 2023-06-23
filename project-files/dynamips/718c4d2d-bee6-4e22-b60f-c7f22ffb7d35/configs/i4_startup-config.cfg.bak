@@ -89,11 +89,13 @@ interface GigabitEthernet2/0
  vrf forwarding site1
  ip address 20.1.3.2 255.255.255.0
  negotiation auto
+ ip rsvp bandwidth ingress percent 50
 !
 interface GigabitEthernet3/0
  vrf forwarding site2
  ip address 20.1.4.2 255.255.255.0
  negotiation auto
+ ip rsvp bandwidth ingress percent 50
 !
 interface GigabitEthernet4/0
  no ip address
@@ -104,6 +106,8 @@ router ospf 10
  router-id 4.4.4.4
  network 4.4.4.4 0.0.0.0 area 0
  network 10.1.3.0 0.0.0.255 area 0
+ network 20.1.3.0 0.0.0.255 area 0
+ network 20.1.4.0 0.0.0.255 area 0
 !
 router bgp 100
  bgp router-id 4.4.4.4
